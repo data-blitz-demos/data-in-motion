@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# Kafka broker and topic
+BROKER="<your_broker>"
+TOPIC="<your_topic>"
+
+# Avro schema
+SCHEMA='{"type": "record", ...}'
+
+# Function to send a message while ignoring errors
+send_message() {
+    echo "$1" | kafka-avro-console-producer \
+        --topic order-transactions \
+        --broker-list localhost:9092 \
+        --property value.schema.id=2 \
+        --property bootstrap.servers=localhost:9092 \
+        --property dlq.auto.flush=true \
+        2>/dev/null
+}
+
+
+
+# Loop to read and send each message
+while true; do
+    echo -n "Enter JSON Payload: "
+    read -r message
+
+    # Send the message, ignoring any errors
+    send_message "$message"
+done

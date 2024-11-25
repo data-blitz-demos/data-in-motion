@@ -1,0 +1,111 @@
+{
+    "ruleSet": {
+        "domainRules": [
+            {
+                "name": "customers_under_age_of_18_not_supported",
+                "kind": "CONDITION",
+                "type": "CEL",
+                "mode": "WRITE",
+                "expr": "message.age >= 18",
+                "params": {
+                    "dlq.topic": "order-transactions-dlq"
+                },
+                "onFailure": "DLQ"
+            },
+            {
+                "name": "unsupported_credit_card_type",
+                "kind": "CONDITION",
+                "type": "CEL",
+                "mode": "WRITE",
+                "expr": "message.creditCardNumberType in [\"AMEX\", \"Visa\", \"Mastercard\"]",
+                "params": {
+                    "dlq.topic": "order-transactions--dlq"
+                },
+                "onFailure": "DLQ"
+            },
+            {
+                "name": "visa_card_number_is_not_16_digits_long",
+                "kind": "CONDITION",
+                "type": "CEL",
+                "mode": "WRITE",
+                "expr": "message.creditCardNumberType == \"Visa\" ? size(message.creditCardNumber) == 16:true",
+                "params": {
+                    "dlq.topic": "order-transactions-dlq"
+                },
+                "onFailure": "DLQ"
+            },
+            {
+                "name": "visa_card_number_first_digit_is_not_5",
+                "kind": "CONDITION",
+                "type": "CEL",
+                "mode": "WRITE",
+                "expr": "message.creditCardNumberType == \"Visa\" ? message.creditCardNumber.matches(\"^5[0-9]{15}$\"):true",
+                "params": {
+                    "dlq.topic": "order-transactions-dlq"
+                },
+                "onFailure": "DLQ"
+            },
+            {
+                "name": "mastercard_card_number_is_not_16_digits_long",
+                "kind": "CONDITION",
+                "type": "CEL",
+                "mode": "WRITE",
+                "expr": "message.creditCardNumberType == \"Mastercard\" ? size(message.creditCardNumber) == 16:true",
+                "params": {
+                    "dlq.topic": "order-transactions-dlq"
+                },
+                "onFailure": "DLQ"
+            },
+            {
+                "name": "mastercard_card_number_first_digit_is_not_2",
+                "kind": "CONDITION",
+                "type": "CEL",
+                "mode": "WRITE",
+                "expr": "message.creditCardNumberType == \"Mastercard\" ? message.creditCardNumber.matches(\"^2[0-9]{15}$\"):true",
+                "params": {
+                    "dlq.topic": "order-transactions-dlq"
+                },
+                "onFailure": "DLQ"
+            },
+            {
+                "name": "amex_card_number_is_not_15_digits_long",
+                "kind": "CONDITION",
+                "type": "CEL",
+                "mode": "WRITE",
+                "expr": "message.creditCardNumberType == \"AMEX\" ? size(message.creditCardNumber) == 15:true",
+                "params": {
+                    "dlq.topic": "order-transactions-dlq"
+                },
+                "onFailure": "DLQ"
+            },
+            {
+                "name": "amex_card_number_first_digit_is_not_3",
+                "kind": "CONDITION",
+                "type": "CEL",
+                "mode": "WRITE",
+                "expr": "message.creditCardNumberType == \"AMEX\" ? message.creditCardNumber.matches(\"^3[0-9]{14}$\"):true",
+                "params": {
+                    "dlq.topic": "order-transactions-dlq"
+                },
+                "onFailure": "DLQ"
+            }
+        ],
+        "migrationRules": [
+            {
+                "name": "changeFirstNameToFirst_name",
+                "kind": "TRANSFORM",
+                "type": "JSONATA",
+                "mode": "UPGRADE",
+                "expr": "$merge([$sift($, function($v, $k) {$k != 'firstName'}), {'first_name': $.'firstName'}])"
+            },
+            {
+                "name": "changeFirst_nameToFirstName",
+                "kind": "TRANSFORM",
+                "type": "JSONATA",
+                "mode": "DOWNGRADE",
+                "expr": "$merge([$sift($, function($v, $k) {$k != 'first_name'}), {'firstName': $.'first_name'}])"
+            }
+
+        ]
+    }
+}

@@ -1,0 +1,28 @@
+{
+  "metadata": {
+    "properties": {
+      "owner": "data-blitz.com",
+      "owner_email": "orders.team@acme.com",
+      "slo_timeliness_secs": "10",
+      "major_version": "2"
+    },
+    "ruleSet": {
+      "migrationRules": [
+        {
+          "name": "changeFirstNameToFirst_name",
+          "kind": "TRANSFORM",
+          "type": "JSONATA",
+          "mode": "UPGRADE",
+          "expr": "$merge([$sift($, function($v, $k) {$k != 'firstName'}), {'first_name': $.'firstName'}])"
+        },
+        {
+          "name": "changeFirst_nameToFirstName",
+          "kind": "TRANSFORM",
+          "type": "JSONATA",
+          "mode": "DOWNGRADE",
+          "expr": "$merge([$sift($, function($v, $k) {$k != 'first_name'}), {'firstName': $.'first_name'}])"
+        }
+      ]
+    }
+  }
+}
