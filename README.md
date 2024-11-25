@@ -6,7 +6,7 @@
 
 ## Overview
 
-This repository accompanies the white paper *Governance with Data in Motion* by Pau Harvener, Principal Consultant at Data-Blitz. The paper serves as a comprehensive guide for software engineers to create a Proof of Concept (POC) for governance in stream processing systems, particularly focusing on **data in motion** using the **Confluent Platform** and **Kafka**.
+This repository accompanies the white paper *Governance with Data in Motion. The paper serves as a comprehensive guide for software engineers to create a Proof of Concept (POC) for governance in stream processing systems, particularly focusing on **data in motion** using the **Confluent Platform** and **Kafka**.
 
 It outlines the importance of enforcing data governance and quality control in real-time pipelines and provides step-by-step instructions, examples, and the necessary artifacts for building robust data governance mechanisms.
 
