@@ -1,0 +1,17 @@
+{
+    "domainRules": [
+        {
+            "name": "encryptPII",
+            "type": "ENCRYPT",
+            "tags": [
+                "PII"
+            ],
+            "params": {
+                "encrypt.kek.name": "local-kek1",
+                "encrypt.kms.key.id": "mykey",
+                "encrypt.kms.type": "local-kms"
+            },
+            "onFailure": "ERROR,NONE"
+        }  
+    ]
+}
